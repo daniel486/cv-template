@@ -1,0 +1,210 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 16px;
+  font-family: 'Jura', sans-serif;
+  background-color: #f2f2f2;
+}
+
+#main {
+  background-color: #fff;
+  width: 992px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  box-shadow: 10px 10px 30px #666;
+}
+
+#container {
+  width: 80%;
+  padding-top: 90px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-header {
+  padding-bottom: 50px;
+}
+
+section {
+  padding-bottom: 30px;
+}
+
+h3 {
+  font-weight: 400;
+}
+
+h4 {
+  font-weight: 300;
+  color: #666;
+}
+
+/*title width*/
+.summary h2 {
+  width: 15%;
+}
+
+.summary span {
+  width: 85%;
+}
+
+.experience h2 {
+  width: 25%;
+}
+
+.experience span {
+  width: 75%;
+}
+
+.education h2 {
+  width: 15%;
+}
+
+.education span {
+  width: 85%;
+}
+
+.skills h2 {
+  width: 9%;
+}
+
+.skills .line {
+  width: 91%;
+}
+/*end title width*/
+
+/*header section*/
+#header {
+  display: flex;
+  align-items: center;
+}
+
+.personal-image {
+  width: 20%;
+}
+
+.personal-image .profile-picture {
+  border-radius: 100%;
+  transform: translateY(15px);
+}
+
+.name {
+  font-size: 2.5em;
+  font-weight: normal;
+  padding-bottom: 10px;
+  margin: 0;
+}
+
+.title {
+  width: 60%;
+}
+
+.title p {
+  font-size: 1.2em;
+  width: 95%;
+  color: #666;
+}
+
+.place {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+}
+
+.place img {
+  width: 70%;
+}
+
+.place h4 {
+  font-size: 0.8em;
+}
+/*end header section*/
+
+/*summary section*/
+.title-section {
+  display: flex;
+  align-items: center;
+  padding-bottom: 35px;
+}
+
+.title-section h2 {
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+.title-section span {
+  border-bottom: 1px solid #dedede;
+}
+
+.summary-content,
+.experience-content,
+.education-content,
+.certification-content,
+.skills-content {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.summary-content p,
+.places p {
+  font-weight: 300;
+  padding-bottom: 20px;
+  line-height: 1.5em;
+}
+/*end summary section*/
+
+/*work experience section*/
+.places {
+  padding-bottom: 15px;
+}
+
+.title-experience {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.company {
+  padding-bottom: 10px;
+}
+/*end work experience section*/
+
+/*education section*/
+.certifications h4 {
+  display: block;
+  padding-bottom: 5px;
+}
+/*end education section*/
+
+/*skills section*/
+.skills-content {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 50px;
+}
+
+.skills-content li {
+  list-style-type: none;
+  display: inline-block;
+  width: 40px;
+  height: 1.2em;
+  border-radius: 5px;
+  margin-left: 5px;
+  /*transform: skew(-40deg);*/
+}
+
+.skills-content li.fill {
+  background-color: rgba(0, 0, 44, 0.8);
+}
+
+.skills-content li.empty {
+  background-color: rgba(0, 0, 44, 0.2);
+}
+/*end skills section*/

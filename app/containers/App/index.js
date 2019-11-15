@@ -12,6 +12,9 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from 'containers/HomePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import NewEmployeeInfo from 'containers/NewEmployeeInfo/Loadable';
+import EmployeeList from 'containers/EmployeeList/Loadable';
+import EmployeeInfo from '../EmployeeInfo';
 
 import GlobalStyle from '../../global-styles';
 
@@ -20,6 +23,13 @@ export default function App() {
     <div>
       <Switch>
         <Route exact path="/" component={HomePage} />
+        <Route exact path="/create-employee" component={NewEmployeeInfo} />
+        <Route
+          exact
+          path="/employee-info/:idEmployee"
+          component={EmployeeInfo}
+        />
+        <Route exact path="/employee-list" component={EmployeeList} />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />
