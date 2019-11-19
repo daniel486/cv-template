@@ -11,12 +11,21 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useInjectReducer } from 'utils/injectReducer';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import { createEmployee } from './actions';
 import reducer from './reducer';
 import SkillField from '../../components/SkillField/Loadable';
 import WorkExperienceField from '../../components/WorkExperienceField/Loadable';
 import EducationField from '../../components/EducationField/Loadable';
 import CertificationField from '../CertificationField/Loadable';
+import Container from '@material-ui/core/Container';
 
 function NewEmployeeInfo(props) {
   const key = 'employee';
@@ -59,7 +68,9 @@ function NewEmployeeInfo(props) {
       position => position.value,
     );
 
-    const workTime = Object.values(e.target.workTime).map(time => time.value);
+    const workStart = Object.values(e.target.workStart).map(time => time.value);
+
+    const workEnd = Object.values(e.target.workEnd).map(time => time.value);
 
     const workCompany = Object.values(e.target.companyName).map(
       company => company.value,
@@ -76,7 +87,11 @@ function NewEmployeeInfo(props) {
       return degree.value;
     });
 
-    const educationTime = Object.values(e.target.degreeTime).map(
+    const educationStart = Object.values(e.target.degreeStart).map(
+      time => time.value,
+    );
+
+    const educationEnd = Object.values(e.target.degreeEnd).map(
       time => time.value,
     );
 
@@ -86,15 +101,50 @@ function NewEmployeeInfo(props) {
 
     // CERTIFICATION
 
-    // const quantityElements = Object.values(e.target.certification).map(
-    //   quantity => quantity.id.split('-')[1],
-    // );
+    const certificationName = Object.values(e.target.certification).map(
+      certName => certName.value,
+    );
 
     // const certificationQuantity = [];
+
+    // This is used to get the elements position
+    const quantityElements = Object.values(e.target.certification).map(
+      quantity => quantity.id.split('-'),
+    );
+
+    const certificationGrouped = [];
+    let singleCertificationGroup = [];
+    let indexAux = 0;
+    quantityElements.forEach((element, index, array) => {
+      if (parseInt(element[1]) === indexAux) {
+        singleCertificationGroup.splice(
+          element[1],
+          0,
+          certificationName[index],
+        );
+        if (index === array.length - 1) {
+          certificationGrouped.push(singleCertificationGroup);
+        }
+      } else {
+        certificationGrouped.push(singleCertificationGroup);
+        indexAux += 1;
+        singleCertificationGroup = [];
+        singleCertificationGroup.splice(
+          element[1],
+          0,
+          certificationName[index],
+        );
+        if (index === array.length - 1) {
+          certificationGrouped.push(singleCertificationGroup);
+        }
+      }
+    });
 
     // let indexAux = 0;
     // let countAux = 0;
 
+    // // This is used to make sure wich is the ammount of certifications
+    // // per institution
     // quantityElements.forEach((element, index, array) => {
     //   if (indexAux === parseInt(element)) {
     //     countAux += 1;
@@ -108,11 +158,7 @@ function NewEmployeeInfo(props) {
     //   }
     // });
 
-    const certificationName = Object.values(e.target.certification).map(
-      certName => certName.value,
-    );
-
-    const cetificationInstitute = Object.values(e.target.certInst).map(
+    const certificationInstitute = Object.values(e.target.certInst).map(
       institution => institution.value,
     );
 
@@ -129,19 +175,21 @@ function NewEmployeeInfo(props) {
       },
       work: {
         workPosition,
-        workTime,
+        workStart,
+        workEnd,
         workCompany,
         workResponsabilities,
       },
       education: {
         educationDegree,
-        educationTime,
+        educationStart,
+        educationEnd,
         institutionName,
       },
       certification: {
-        // certificationQuantity,
+        certificationGrouped,
         certificationName,
-        cetificationInstitute,
+        certificationInstitute,
       },
     };
     props.dispatch(createEmployee(data));
@@ -200,55 +248,131 @@ function NewEmployeeInfo(props) {
 
   return (
     <div>
-      <h1>New employee:</h1>
-      <form onSubmit={handleSubmit}>
-        <h5>Employee Photo</h5>
-        <input type="file" accept=".jpg, .jpeg, .png" name="photoFile" />
-        <h5>Employee Information</h5>
-        <label htmlFor="label">Full Name</label>
-        <input
-          required
-          type="text"
-          name="fullName"
-          placeholder="Enter Full Name"
-        />
-        <label htmlFor="label">Main Skill</label>
-        <input
-          required
-          type="text"
-          name="mainSkill"
-          placeholder="Enter Main Skill"
-        />
-        <h5>Summary</h5>
-        <label htmlFor="label">Summary</label>
-        <textarea
-          required
-          name="summary"
-          placeholder="Write Employee Summary"
-        />
-        <h5>Skills</h5>
-        {skillsRender}
-        <button type="button" onClick={handleAddSkill}>
-          Add Skill
-        </button>
-        <h5>Work Experience</h5>
-        {worksRender}
-        <button type="button" onClick={handleAddWorkExperience}>
-          Add Work
-        </button>
-        <h5>Education</h5>
-        {educationRender}
-        <button type="button" onClick={handleAddEducation}>
-          Add Education
-        </button>
-        <h5>Certifications</h5>
-        {certificationRender}
-        <button type="button" onClick={handleAddCertification}>
-          Add Certification
-        </button>
-        <br />
-        <button type="submit">Create</button>
-      </form>
+      <Container maxWidth="sm">
+        <Paper>
+          <Grid
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="center"
+          >
+            <h1>New employee:</h1>
+            <form onSubmit={handleSubmit}>
+              <h5>Employee Photo</h5>
+              <Button variant="contained" component="label">
+                Upload photo
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  name="photoFile"
+                  style={{ display: 'none' }}
+                />
+              </Button>
+              <h5>Employee Information</h5>
+              <Grid
+                container
+                direction="row"
+                justify="space-around"
+                alignItems="center"
+              >
+                <Grid item xs={6}>
+                  <FormControl>
+                    <InputLabel htmlFor="component-helper">
+                      Full Name
+                    </InputLabel>
+                    <Input required name="fullName" />
+                    <FormHelperText>Enter Full Name</FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <FormControl>
+                    <InputLabel htmlFor="component-helper">
+                      Main Skill
+                    </InputLabel>
+                    <Input required name="mainSkill" />
+                    <FormHelperText>Enter Main Skill</FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    name="summary"
+                    label="Summary"
+                    placeholder="Write Employee Summary"
+                    multiline
+                    margin="normal"
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="column"
+                justify="space-around"
+                alignItems="center"
+                spacing={3}
+              >
+                <Grid item>
+                  <h5>Skills</h5>
+                  {skillsRender}
+                  <Button
+                    variant="contained"
+                    size="small"
+                    type="button"
+                    onClick={handleAddSkill}
+                  >
+                    Add Skill
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <h5>Work Experience</h5>
+                  {worksRender}
+                  <Button
+                    variant="contained"
+                    size="small"
+                    type="button"
+                    onClick={handleAddWorkExperience}
+                  >
+                    Add Work
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <h5>Education</h5>
+                  {educationRender}
+                  <Button
+                    variant="contained"
+                    size="small"
+                    type="button"
+                    onClick={handleAddEducation}
+                  >
+                    Add Education
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <h5>Certifications</h5>
+                  {certificationRender}
+                  <Button
+                    variant="contained"
+                    size="small"
+                    type="button"
+                    onClick={handleAddCertification}
+                  >
+                    Add Certification
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color="primary"
+                    type="submit"
+                  >
+                    Create
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Grid>
+        </Paper>
+      </Container>
     </div>
   );
 }

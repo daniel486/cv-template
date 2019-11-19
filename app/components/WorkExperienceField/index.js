@@ -6,43 +6,80 @@
  */
 
 import React, { memo } from 'react';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 // import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
 function WorkExperienceField(props) {
   return (
     <div>
-      <label htmlFor="label">Position</label>
-      <input
-        required
-        type="text"
-        id={`position-${props.index}`}
-        name="position"
-        placeholder="Enter the position in the company"
-      />
-      <label htmlFor="label">Work time</label>
-      <input
-        required
-        type="text"
-        id={`work-time-${props.index}`}
-        name="workTime"
-        placeholder="Enter the period of this position"
-      />
-      <label htmlFor="label">Company</label>
-      <input
-        required
-        type="text"
-        id={`company-name-${props.index}`}
-        name="companyName"
-        placeholder="Enter the name of the company"
-      />
-      <label htmlFor="label">Responsabilities</label>
-      <textarea
-        required
-        name="responsabilities"
-        id={`responsabilities-${props.index}`}
-        placeholder="Enter the work responsabilities"
-      />
+      <Grid
+        container
+        direction="row"
+        justify="space-around"
+        alignItems="center"
+        spacing={3}
+      >
+        <Grid item>
+          <Grid>
+            <FormControl>
+              <InputLabel htmlFor="component-helper">Position</InputLabel>
+              <Input required id={`position-${props.index}`} name="position" />
+              <FormHelperText>Enter the position in the company</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid>
+            <FormControl>
+              <InputLabel htmlFor="component-helper">Start date</InputLabel>
+              <Input
+                required
+                id={`work-start-${props.index}`}
+                name="workStart"
+              />
+              <FormHelperText>
+                Enter the date of start of this position
+              </FormHelperText>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid>
+            <FormControl>
+              <InputLabel htmlFor="component-helper">End date</InputLabel>
+              <Input required id={`work-end-${props.index}`} name="workEnd" />
+              <FormHelperText>
+                Enter the date of end of this position
+              </FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid>
+            <FormControl>
+              <InputLabel htmlFor="component-helper">Company</InputLabel>
+              <Input
+                required
+                id={`company-name-${props.index}`}
+                name="companyName"
+              />
+              <FormHelperText>Enter the name of the company</FormHelperText>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <TextField
+            id={`responsabilities-${props.index}`}
+            name="responsabilities"
+            label="Responsabilities"
+            placeholder="Enter the work responsabilities"
+            multiline
+            margin="normal"
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 }
