@@ -11,6 +11,7 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { Link } from 'react-router-dom';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -41,12 +42,14 @@ export function EmployeeInfo(props) {
           <section className="content-header">
             <header id="header">
               <div className="personal-image">
-                <img
-                  src={employee[0].localImageUrl}
-                  alt="profile"
-                  className="profile-picture"
-                  height="124px"
-                />
+                <Link to="/employee-list">
+                  <img
+                    src={employee[0].localImageUrl}
+                    alt="profile"
+                    className="profile-picture"
+                    height="124px"
+                  />
+                </Link>
               </div>
               <div className="title">
                 <h1 className="name">{employee[0].fullName}</h1>
@@ -159,6 +162,7 @@ export function EmployeeInfo(props) {
                 (value, index) => (
                   <div className="places">
                     <div className="company certifications">
+                      {console.log('Index', index)}
                       {employee[0].certification.certificationGrouped[
                         index
                       ].map(certValue => (

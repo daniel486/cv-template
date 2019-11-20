@@ -35,6 +35,19 @@ function WorkExperienceField(props) {
           </Grid>
           <Grid>
             <FormControl>
+              <InputLabel htmlFor="component-helper">Company</InputLabel>
+              <Input
+                required
+                id={`company-name-${props.index}`}
+                name="companyName"
+              />
+              <FormHelperText>Enter the name of the company</FormHelperText>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid>
+            <FormControl>
               <InputLabel htmlFor="component-helper">Start date</InputLabel>
               <Input
                 required
@@ -46,8 +59,6 @@ function WorkExperienceField(props) {
               </FormHelperText>
             </FormControl>
           </Grid>
-        </Grid>
-        <Grid item>
           <Grid>
             <FormControl>
               <InputLabel htmlFor="component-helper">End date</InputLabel>
@@ -55,17 +66,6 @@ function WorkExperienceField(props) {
               <FormHelperText>
                 Enter the date of end of this position
               </FormHelperText>
-            </FormControl>
-          </Grid>
-          <Grid>
-            <FormControl>
-              <InputLabel htmlFor="component-helper">Company</InputLabel>
-              <Input
-                required
-                id={`company-name-${props.index}`}
-                name="companyName"
-              />
-              <FormHelperText>Enter the name of the company</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>

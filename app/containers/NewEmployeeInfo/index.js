@@ -19,13 +19,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import { createEmployee } from './actions';
 import reducer from './reducer';
 import SkillField from '../../components/SkillField/Loadable';
 import WorkExperienceField from '../../components/WorkExperienceField/Loadable';
 import EducationField from '../../components/EducationField/Loadable';
 import CertificationField from '../CertificationField/Loadable';
-import Container from '@material-ui/core/Container';
 
 function NewEmployeeInfo(props) {
   const key = 'employee';
@@ -48,97 +48,137 @@ function NewEmployeeInfo(props) {
     const mainSkill = e.target.mainSkill.value;
     const summary = e.target.summary.value;
 
-    console.log('SUMMARY', e.target.summary);
+    console.log('SUMMARY', e.target.skillHability.value);
     // const skillQuantity = e.target.skillName.length;
     // const workQuantity = e.target.position.length;
     // const educationQuantity = e.target.degree.length;
     // const certificationQuantity = e.target.certInst.length;
 
     // SKILLS
-    const skillName = Object.values(e.target.skillName).map(
-      skills => skills.value,
-    );
 
-    const skillHability = Object.values(e.target.skillHability).map(
-      hability => hability.value,
-    );
+    let skillName;
+    let skillHability;
+    if (e.target.degree.length === undefined) {
+      skillName = [e.target.skillName.value];
+      skillHability = [e.target.skillHability.value];
+    } else {
+      skillName = Object.values(e.target.skillName).map(skills => skills.value);
+
+      skillHability = Object.values(e.target.skillHability).map(
+        hability => hability.value,
+      );
+    }
 
     // WORK
-    const workPosition = Object.values(e.target.position).map(
-      position => position.value,
-    );
+    let workPosition;
+    let workStart;
+    let workEnd;
+    let workCompany;
+    let workResponsabilities;
 
-    const workStart = Object.values(e.target.workStart).map(time => time.value);
+    if (e.target.position.length === undefined) {
+      workPosition = [e.target.position.value];
+      workStart = [e.target.workStart.value];
+      workEnd = [e.target.workEnd.value];
+      workCompany = [e.target.companyName.value];
+      workResponsabilities = [e.target.responsabilities.value];
+    } else {
+      workPosition = Object.values(e.target.position).map(
+        position => position.value,
+      );
 
-    const workEnd = Object.values(e.target.workEnd).map(time => time.value);
+      workStart = Object.values(e.target.workStart).map(time => time.value);
 
-    const workCompany = Object.values(e.target.companyName).map(
-      company => company.value,
-    );
+      workEnd = Object.values(e.target.workEnd).map(time => time.value);
 
-    const workResponsabilities = Object.values(e.target.responsabilities).map(
-      responsabilities => responsabilities.value,
-    );
+      workCompany = Object.values(e.target.companyName).map(
+        company => company.value,
+      );
+
+      workResponsabilities = Object.values(e.target.responsabilities).map(
+        responsabilities => responsabilities.value,
+      );
+    }
 
     // EDUCATION
 
-    const educationDegree = Object.values(e.target.degree).map(degree => {
-      console.log('DEGREEEEE', e.target.degree.value);
-      return degree.value;
-    });
+    let educationDegree;
+    let educationStart;
+    let educationEnd;
+    let institutionName;
 
-    const educationStart = Object.values(e.target.degreeStart).map(
-      time => time.value,
-    );
+    if (e.target.degree.length === undefined) {
+      educationDegree = [e.target.degree.value];
+      educationStart = [e.target.degreeStart.value];
+      educationEnd = [e.target.degreeEnd.value];
+      institutionName = [e.target.institutionName.value];
+    } else {
+      educationDegree = Object.values(e.target.degree).map(degree => {
+        console.log('DEGREEEEE', e.target.degree.value);
+        return degree.value;
+      });
 
-    const educationEnd = Object.values(e.target.degreeEnd).map(
-      time => time.value,
-    );
+      educationStart = Object.values(e.target.degreeStart).map(
+        time => time.value,
+      );
 
-    const institutionName = Object.values(e.target.institutionName).map(
-      institution => institution.value,
-    );
+      educationEnd = Object.values(e.target.degreeEnd).map(time => time.value);
+
+      institutionName = Object.values(e.target.institutionName).map(
+        institution => institution.value,
+      );
+    }
 
     // CERTIFICATION
 
-    const certificationName = Object.values(e.target.certification).map(
-      certName => certName.value,
-    );
+    let certificationGrouped;
 
-    // const certificationQuantity = [];
+    if (e.target.certification.length === undefined) {
+      certificationGrouped = [[e.target.certification.value]];
+    } else {
+      const certificationName = Object.values(e.target.certification).map(
+        certName => certName.value,
+      );
 
-    // This is used to get the elements position
-    const quantityElements = Object.values(e.target.certification).map(
-      quantity => quantity.id.split('-'),
-    );
+      // const certificationQuantity = [];
 
-    const certificationGrouped = [];
-    let singleCertificationGroup = [];
-    let indexAux = 0;
-    quantityElements.forEach((element, index, array) => {
-      if (parseInt(element[1]) === indexAux) {
-        singleCertificationGroup.splice(
-          element[1],
-          0,
-          certificationName[index],
-        );
-        if (index === array.length - 1) {
+      // This is used to get the elements position
+      console.log('quantityBefore', e.target.certification.length);
+      const quantityElements = Object.values(e.target.certification).map(
+        quantity => {
+          console.log('quantity', quantity.length);
+          return quantity.id.split('-');
+        },
+      );
+
+      certificationGrouped = [];
+      let singleCertificationGroup = [];
+      let indexAux = 0;
+      quantityElements.forEach((element, index, array) => {
+        if (parseInt(element[1]) === indexAux) {
+          singleCertificationGroup.splice(
+            element[1],
+            0,
+            certificationName[index],
+          );
+          if (index === array.length - 1) {
+            certificationGrouped.push(singleCertificationGroup);
+          }
+        } else {
           certificationGrouped.push(singleCertificationGroup);
+          indexAux += 1;
+          singleCertificationGroup = [];
+          singleCertificationGroup.splice(
+            element[1],
+            0,
+            certificationName[index],
+          );
+          if (index === array.length - 1) {
+            certificationGrouped.push(singleCertificationGroup);
+          }
         }
-      } else {
-        certificationGrouped.push(singleCertificationGroup);
-        indexAux += 1;
-        singleCertificationGroup = [];
-        singleCertificationGroup.splice(
-          element[1],
-          0,
-          certificationName[index],
-        );
-        if (index === array.length - 1) {
-          certificationGrouped.push(singleCertificationGroup);
-        }
-      }
-    });
+      });
+    }
 
     // let indexAux = 0;
     // let countAux = 0;
@@ -157,10 +197,15 @@ function NewEmployeeInfo(props) {
     //     }
     //   }
     // });
+    let certificationInstitute;
 
-    const certificationInstitute = Object.values(e.target.certInst).map(
-      institution => institution.value,
-    );
+    if (e.target.certInst.length === undefined) {
+      certificationInstitute = [e.target.certInst.value];
+    } else {
+      certificationInstitute = Object.values(e.target.certInst).map(
+        institution => institution.value,
+      );
+    }
 
     const data = {
       id: new Date(),
@@ -188,7 +233,6 @@ function NewEmployeeInfo(props) {
       },
       certification: {
         certificationGrouped,
-        certificationName,
         certificationInstitute,
       },
     };
@@ -248,11 +292,11 @@ function NewEmployeeInfo(props) {
 
   return (
     <div>
-      <Container maxWidth="sm">
+      <Container>
         <Paper>
           <Grid
             container
-            direction="row"
+            direction="column"
             justify="space-around"
             alignItems="center"
           >
@@ -274,8 +318,9 @@ function NewEmployeeInfo(props) {
                 direction="row"
                 justify="space-around"
                 alignItems="center"
+                spacing={3}
               >
-                <Grid item xs={6}>
+                <Grid item>
                   <FormControl>
                     <InputLabel htmlFor="component-helper">
                       Full Name

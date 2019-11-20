@@ -34,6 +34,19 @@ function EducationField(props) {
           </Grid>
           <Grid>
             <FormControl>
+              <InputLabel htmlFor="component-helper">Institution</InputLabel>
+              <Input
+                required
+                id={`institution-name-${props.index}`}
+                name="institutionName"
+              />
+              <FormHelperText>Enter the name of the institution</FormHelperText>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid>
+            <FormControl>
               <InputLabel htmlFor="component-helper">Degree start</InputLabel>
               <Input
                 required
@@ -43,8 +56,6 @@ function EducationField(props) {
               <FormHelperText>Enter the date of start</FormHelperText>
             </FormControl>
           </Grid>
-        </Grid>
-        <Grid item>
           <Grid>
             <FormControl>
               <InputLabel htmlFor="component-helper">Degree end</InputLabel>
@@ -54,17 +65,6 @@ function EducationField(props) {
                 name="degreeEnd"
               />
               <FormHelperText>Enter the date of end</FormHelperText>
-            </FormControl>
-          </Grid>
-          <Grid>
-            <FormControl>
-              <InputLabel htmlFor="component-helper">Institution</InputLabel>
-              <Input
-                required
-                id={`institution-name-${props.index}`}
-                name="institutionName"
-              />
-              <FormHelperText>Enter the name of the institution</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
