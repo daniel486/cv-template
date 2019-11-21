@@ -10,6 +10,7 @@
 
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useInjectReducer } from 'utils/injectReducer';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
@@ -20,6 +21,13 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { createEmployee } from './actions';
 import reducer from './reducer';
 import SkillField from '../../components/SkillField/Loadable';
@@ -35,221 +43,231 @@ function NewEmployeeInfo(props) {
   const [workExperience, setWorkExperience] = useState([]);
   const [education, setEducation] = useState([]);
   const [certification, setCertification] = useState([]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [open, setOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const validateAllFields = e => {
+    if (e.target.photoFile.value === '') {
+      return [false, 'You must have to upload an image of the employee.'];
+    }
+    if (e.target.skillName === undefined) {
+      return [false, 'You must have to enter at least one skill.'];
+    }
+    if (e.target.position === undefined) {
+      return [false, 'You must have to enter at least one previous job.'];
+    }
+    if (e.target.degree === undefined) {
+      return [false, 'You must have to enter at least one educational title.'];
+    }
+    if (e.target.certification === undefined) {
+      return [false, 'You must have to enter at least one certification.'];
+    }
+    return [true];
+  };
+
+  const handleDialogOpen = message => {
+    setErrorMessage(message);
+    setOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+    setErrorMessage('');
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
+    const validation = validateAllFields(e);
+    if (validation[0]) {
+      // Image upload
+      const file = e.target.photoFile.files[0];
+      const localImageUrl = window.URL.createObjectURL(file);
+      // End image upload
 
-    // Image upload
-    const file = e.target.photoFile.files[0];
-    const localImageUrl = window.URL.createObjectURL(file);
-    // End image upload
+      const fullName = e.target.fullName.value;
+      const mainSkill = e.target.mainSkill.value;
+      const summary = e.target.summary.value;
 
-    const fullName = e.target.fullName.value;
-    const mainSkill = e.target.mainSkill.value;
-    const summary = e.target.summary.value;
+      // SKILLS
 
-    console.log('SUMMARY', e.target.skillHability.value);
-    // const skillQuantity = e.target.skillName.length;
-    // const workQuantity = e.target.position.length;
-    // const educationQuantity = e.target.degree.length;
-    // const certificationQuantity = e.target.certInst.length;
+      let skillName;
+      let skillHability;
+      if (e.target.degree.length === undefined) {
+        skillName = [e.target.skillName.value];
+        skillHability = [e.target.skillHability.value];
+      } else {
+        skillName = Object.values(e.target.skillName).map(
+          skills => skills.value,
+        );
 
-    // SKILLS
+        skillHability = Object.values(e.target.skillHability).map(
+          hability => hability.value,
+        );
+      }
 
-    let skillName;
-    let skillHability;
-    if (e.target.degree.length === undefined) {
-      skillName = [e.target.skillName.value];
-      skillHability = [e.target.skillHability.value];
-    } else {
-      skillName = Object.values(e.target.skillName).map(skills => skills.value);
+      // WORK
+      let workPosition;
+      let workStart;
+      let workEnd;
+      let workCompany;
+      let workResponsabilities;
 
-      skillHability = Object.values(e.target.skillHability).map(
-        hability => hability.value,
-      );
-    }
+      if (e.target.position.length === undefined) {
+        workPosition = [e.target.position.value];
+        workStart = [e.target.workStart.value];
+        workEnd = [e.target.workEnd.value];
+        workCompany = [e.target.companyName.value];
+        workResponsabilities = [e.target.responsabilities.value];
+      } else {
+        workPosition = Object.values(e.target.position).map(
+          position => position.value,
+        );
 
-    // WORK
-    let workPosition;
-    let workStart;
-    let workEnd;
-    let workCompany;
-    let workResponsabilities;
+        workStart = Object.values(e.target.workStart).map(time => time.value);
 
-    if (e.target.position.length === undefined) {
-      workPosition = [e.target.position.value];
-      workStart = [e.target.workStart.value];
-      workEnd = [e.target.workEnd.value];
-      workCompany = [e.target.companyName.value];
-      workResponsabilities = [e.target.responsabilities.value];
-    } else {
-      workPosition = Object.values(e.target.position).map(
-        position => position.value,
-      );
+        workEnd = Object.values(e.target.workEnd).map(time => time.value);
 
-      workStart = Object.values(e.target.workStart).map(time => time.value);
+        workCompany = Object.values(e.target.companyName).map(
+          company => company.value,
+        );
 
-      workEnd = Object.values(e.target.workEnd).map(time => time.value);
+        workResponsabilities = Object.values(e.target.responsabilities).map(
+          responsabilities => responsabilities.value,
+        );
+      }
 
-      workCompany = Object.values(e.target.companyName).map(
-        company => company.value,
-      );
+      // EDUCATION
 
-      workResponsabilities = Object.values(e.target.responsabilities).map(
-        responsabilities => responsabilities.value,
-      );
-    }
+      let educationDegree;
+      let educationStart;
+      let educationEnd;
+      let institutionName;
 
-    // EDUCATION
+      if (e.target.degree.length === undefined) {
+        educationDegree = [e.target.degree.value];
+        educationStart = [e.target.degreeStart.value];
+        educationEnd = [e.target.degreeEnd.value];
+        institutionName = [e.target.institutionName.value];
+      } else {
+        educationDegree = Object.values(e.target.degree).map(
+          degree => degree.value,
+        );
 
-    let educationDegree;
-    let educationStart;
-    let educationEnd;
-    let institutionName;
+        educationStart = Object.values(e.target.degreeStart).map(
+          time => time.value,
+        );
 
-    if (e.target.degree.length === undefined) {
-      educationDegree = [e.target.degree.value];
-      educationStart = [e.target.degreeStart.value];
-      educationEnd = [e.target.degreeEnd.value];
-      institutionName = [e.target.institutionName.value];
-    } else {
-      educationDegree = Object.values(e.target.degree).map(degree => {
-        console.log('DEGREEEEE', e.target.degree.value);
-        return degree.value;
-      });
+        educationEnd = Object.values(e.target.degreeEnd).map(
+          time => time.value,
+        );
 
-      educationStart = Object.values(e.target.degreeStart).map(
-        time => time.value,
-      );
+        institutionName = Object.values(e.target.institutionName).map(
+          institution => institution.value,
+        );
+      }
 
-      educationEnd = Object.values(e.target.degreeEnd).map(time => time.value);
+      // CERTIFICATION
 
-      institutionName = Object.values(e.target.institutionName).map(
-        institution => institution.value,
-      );
-    }
+      let certificationGrouped;
 
-    // CERTIFICATION
+      if (e.target.certification.length === undefined) {
+        certificationGrouped = [[e.target.certification.value]];
+      } else {
+        const certificationName = Object.values(e.target.certification).map(
+          certName => certName.value,
+        );
 
-    let certificationGrouped;
+        // const certificationQuantity = [];
 
-    if (e.target.certification.length === undefined) {
-      certificationGrouped = [[e.target.certification.value]];
-    } else {
-      const certificationName = Object.values(e.target.certification).map(
-        certName => certName.value,
-      );
+        // This is used to get the elements position
+        const quantityElements = Object.values(e.target.certification).map(
+          quantity => quantity.id.split('-'),
+        );
 
-      // const certificationQuantity = [];
+        certificationGrouped = [];
+        let singleCertificationGroup = [];
+        let indexAux = 0;
+        quantityElements.forEach((element, index, array) => {
+          if (parseInt(element[1]) === indexAux) {
+            singleCertificationGroup.splice(
+              element[1],
+              0,
+              certificationName[index],
+            );
+            if (index === array.length - 1) {
+              certificationGrouped.push(singleCertificationGroup);
+            }
+          } else {
+            certificationGrouped.push(singleCertificationGroup);
+            indexAux += 1;
+            singleCertificationGroup = [];
+            singleCertificationGroup.splice(
+              element[1],
+              0,
+              certificationName[index],
+            );
+            if (index === array.length - 1) {
+              certificationGrouped.push(singleCertificationGroup);
+            }
+          }
+        });
+      }
 
-      // This is used to get the elements position
-      console.log('quantityBefore', e.target.certification.length);
-      const quantityElements = Object.values(e.target.certification).map(
-        quantity => {
-          console.log('quantity', quantity.length);
-          return quantity.id.split('-');
+      let certificationInstitute;
+
+      if (e.target.certInst.length === undefined) {
+        certificationInstitute = [e.target.certInst.value];
+      } else {
+        certificationInstitute = Object.values(e.target.certInst).map(
+          institution => institution.value,
+        );
+      }
+
+      const data = {
+        id: new Date(),
+        fullName,
+        mainSkill,
+        summary,
+        localImageUrl,
+        file,
+        skill: {
+          skillName,
+          skillHability,
         },
-      );
+        work: {
+          workPosition,
+          workStart,
+          workEnd,
+          workCompany,
+          workResponsabilities,
+        },
+        education: {
+          educationDegree,
+          educationStart,
+          educationEnd,
+          institutionName,
+        },
+        certification: {
+          certificationGrouped,
+          certificationInstitute,
+        },
+      };
+      props.dispatch(createEmployee(data));
+      e.target.fullName.value = '';
+      e.target.mainSkill.value = '';
+      e.target.summary.value = '';
+      e.target.photoFile.value = '';
+      setSkill([]);
+      setWorkExperience([]);
+      setEducation([]);
+      setCertification([]);
 
-      certificationGrouped = [];
-      let singleCertificationGroup = [];
-      let indexAux = 0;
-      quantityElements.forEach((element, index, array) => {
-        if (parseInt(element[1]) === indexAux) {
-          singleCertificationGroup.splice(
-            element[1],
-            0,
-            certificationName[index],
-          );
-          if (index === array.length - 1) {
-            certificationGrouped.push(singleCertificationGroup);
-          }
-        } else {
-          certificationGrouped.push(singleCertificationGroup);
-          indexAux += 1;
-          singleCertificationGroup = [];
-          singleCertificationGroup.splice(
-            element[1],
-            0,
-            certificationName[index],
-          );
-          if (index === array.length - 1) {
-            certificationGrouped.push(singleCertificationGroup);
-          }
-        }
-      });
-    }
-
-    // let indexAux = 0;
-    // let countAux = 0;
-
-    // // This is used to make sure wich is the ammount of certifications
-    // // per institution
-    // quantityElements.forEach((element, index, array) => {
-    //   if (indexAux === parseInt(element)) {
-    //     countAux += 1;
-    //   } else {
-    //     indexAux += 1;
-    //     certificationQuantity.push(countAux);
-    //     countAux = 1;
-    //     if (index === array.length - 1) {
-    //       certificationQuantity.push(countAux);
-    //     }
-    //   }
-    // });
-    let certificationInstitute;
-
-    if (e.target.certInst.length === undefined) {
-      certificationInstitute = [e.target.certInst.value];
+      props.history.push('/employee-list');
     } else {
-      certificationInstitute = Object.values(e.target.certInst).map(
-        institution => institution.value,
-      );
+      handleDialogOpen(validation[1]);
     }
-
-    const data = {
-      id: new Date(),
-      fullName,
-      mainSkill,
-      summary,
-      localImageUrl,
-      file,
-      skill: {
-        skillName,
-        skillHability,
-      },
-      work: {
-        workPosition,
-        workStart,
-        workEnd,
-        workCompany,
-        workResponsabilities,
-      },
-      education: {
-        educationDegree,
-        educationStart,
-        educationEnd,
-        institutionName,
-      },
-      certification: {
-        certificationGrouped,
-        certificationInstitute,
-      },
-    };
-    props.dispatch(createEmployee(data));
-    console.log(createEmployee(data));
-    e.target.fullName.value = '';
-    e.target.mainSkill.value = '';
-    e.target.summary.value = '';
-    e.target.photoFile.value = '';
-    // setSkill([]);
-    // setWorkExperience([]);
-    // setEducation([]);
-    // setCertification([]);
-
-    console.log(data);
-
-    props.history.push('/employee-list');
   };
 
   const handleAddSkill = () => {
@@ -290,8 +308,34 @@ function NewEmployeeInfo(props) {
     ),
   );
 
+  const handleMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <div>
+      <Dialog
+        open={open}
+        onClose={handleDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Lack of information</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {errorMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Container>
         <Paper>
           <Grid
@@ -300,7 +344,36 @@ function NewEmployeeInfo(props) {
             justify="space-around"
             alignItems="center"
           >
-            <h1>New employee:</h1>
+            <Grid
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="center"
+            >
+              <Grid item>
+                <Button
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  onClick={handleMenuOpen}
+                >
+                  Menu
+                </Button>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem onClick={handleMenuClose}>
+                    <Link to="/employee-list">Employee List</Link>
+                  </MenuItem>
+                </Menu>
+              </Grid>
+              <Grid item>
+                <h1>New employee:</h1>
+              </Grid>
+            </Grid>
             <form onSubmit={handleSubmit}>
               <h5>Employee Photo</h5>
               <Button variant="contained" component="label">
@@ -334,7 +407,7 @@ function NewEmployeeInfo(props) {
                     <InputLabel htmlFor="component-helper">
                       Main Skill
                     </InputLabel>
-                    <Input required name="mainSkill" />
+                    <Input required error={false} name="mainSkill" />
                     <FormHelperText>Enter Main Skill</FormHelperText>
                   </FormControl>
                 </Grid>
@@ -361,6 +434,7 @@ function NewEmployeeInfo(props) {
                   <Button
                     variant="contained"
                     size="small"
+                    color="secondary"
                     type="button"
                     onClick={handleAddSkill}
                   >
@@ -373,6 +447,7 @@ function NewEmployeeInfo(props) {
                   <Button
                     variant="contained"
                     size="small"
+                    color="secondary"
                     type="button"
                     onClick={handleAddWorkExperience}
                   >
@@ -385,6 +460,7 @@ function NewEmployeeInfo(props) {
                   <Button
                     variant="contained"
                     size="small"
+                    color="secondary"
                     type="button"
                     onClick={handleAddEducation}
                   >
@@ -397,6 +473,7 @@ function NewEmployeeInfo(props) {
                   <Button
                     variant="contained"
                     size="small"
+                    color="secondary"
                     type="button"
                     onClick={handleAddCertification}
                   >

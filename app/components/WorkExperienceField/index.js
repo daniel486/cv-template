@@ -51,6 +51,7 @@ function WorkExperienceField(props) {
               <InputLabel htmlFor="component-helper">Start date</InputLabel>
               <Input
                 required
+                type="number"
                 id={`work-start-${props.index}`}
                 name="workStart"
               />

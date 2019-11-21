@@ -162,7 +162,6 @@ export function EmployeeInfo(props) {
                 (value, index) => (
                   <div className="places">
                     <div className="company certifications">
-                      {console.log('Index', index)}
                       {employee[0].certification.certificationGrouped[
                         index
                       ].map(certValue => (

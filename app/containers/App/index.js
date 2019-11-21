@@ -8,10 +8,8 @@
  */
 
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-import HomePage from 'containers/HomePage/Loadable';
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import NewEmployeeInfo from 'containers/NewEmployeeInfo/Loadable';
 import EmployeeList from 'containers/EmployeeList/Loadable';
 import EmployeeInfo from '../EmployeeInfo';
@@ -22,7 +20,6 @@ export default function App() {
   return (
     <div>
       <Switch>
-        <Route exact path="/" component={HomePage} />
         <Route exact path="/create-employee" component={NewEmployeeInfo} />
         <Route
           exact
@@ -30,7 +27,7 @@ export default function App() {
           component={EmployeeInfo}
         />
         <Route exact path="/employee-list" component={EmployeeList} />
-        <Route component={NotFoundPage} />
+        <Redirect from="*" to="/create-employee" />
       </Switch>
       <GlobalStyle />
     </div>

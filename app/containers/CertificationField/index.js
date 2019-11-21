@@ -73,6 +73,7 @@ export function CertificationField(props) {
           <Button
             variant="contained"
             size="small"
+            color="secondary"
             onClick={handleAddCertificationTitle}
           >
             Add Certification Title

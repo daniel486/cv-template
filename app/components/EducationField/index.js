@@ -50,6 +50,7 @@ function EducationField(props) {
               <InputLabel htmlFor="component-helper">Degree start</InputLabel>
               <Input
                 required
+                type="number"
                 id={`degree-start-${props.index}`}
                 name="degreeStart"
               />

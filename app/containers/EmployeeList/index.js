@@ -5,12 +5,14 @@
  *
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import { Container, Paper, Grid } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { Button, Menu, MenuItem } from '@material-ui/core';
 import reducer from './reducer';
 import saga from './saga';
 import Employee from '../Employee/Loadable';
@@ -18,6 +20,15 @@ import Employee from '../Employee/Loadable';
 export function EmployeeList(props) {
   useInjectReducer({ key: 'employeeList', reducer });
   useInjectSaga({ key: 'employeeList', saga });
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div>
@@ -30,7 +41,37 @@ export function EmployeeList(props) {
             alignItems="center"
           >
             <Grid item>
-              <h1>Employees</h1>
+              <Grid
+                container
+                direction="row"
+                justify="space-around"
+                alignItems="center"
+                spacing={10}
+              >
+                <Grid item>
+                  <Button
+                    aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    onClick={handleMenuOpen}
+                  >
+                    Menu
+                  </Button>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                  >
+                    <MenuItem onClick={handleMenuClose}>
+                      <Link to="/create-employee">New Employee</Link>
+                    </MenuItem>
+                  </Menu>
+                </Grid>
+                <Grid item>
+                  <h1>Employees</h1>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               <Grid
