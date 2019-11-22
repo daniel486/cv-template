@@ -10,9 +10,15 @@ import { connect } from 'react-redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import { Container, Paper, Grid } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  Container,
+  Paper,
+  Grid,
+} from '@material-ui/core';
 import reducer from './reducer';
 import saga from './saga';
 import Employee from '../Employee/Loadable';
@@ -20,7 +26,7 @@ import Employee from '../Employee/Loadable';
 export function EmployeeList(props) {
   useInjectReducer({ key: 'employeeList', reducer });
   useInjectSaga({ key: 'employeeList', saga });
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = event => {
     setAnchorEl(event.currentTarget);
