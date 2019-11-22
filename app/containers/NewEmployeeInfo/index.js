@@ -94,7 +94,7 @@ function NewEmployeeInfo(props) {
 
       let skillName;
       let skillHability;
-      if (e.target.degree.length === undefined) {
+      if (e.target.skillName.length === undefined) {
         skillName = [e.target.skillName.value];
         skillHability = [e.target.skillHability.value];
       } else {
