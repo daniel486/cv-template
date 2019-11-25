@@ -29,6 +29,8 @@ function SkillField(props) {
 
   return (
     <div>
+      <br />
+      <hr />
       <Grid
         container
         direction="column"

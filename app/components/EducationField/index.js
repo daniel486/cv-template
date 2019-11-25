@@ -17,6 +17,8 @@ import Grid from '@material-ui/core/Grid';
 function EducationField(props) {
   return (
     <div>
+      <br />
+      <hr />
       <Grid
         container
         direction="row"

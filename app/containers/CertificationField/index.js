@@ -46,6 +46,8 @@ export function CertificationField(props) {
 
   return (
     <div>
+      <br />
+      <hr />
       <Grid
         container
         direction="row"

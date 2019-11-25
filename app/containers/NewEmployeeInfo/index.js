@@ -225,46 +225,50 @@ function NewEmployeeInfo(props) {
         );
       }
 
-      const data = {
-        id: new Date(),
-        fullName,
-        mainSkill,
-        summary,
-        localImageUrl,
-        file,
-        skill: {
-          skillName,
-          skillHability,
-        },
-        work: {
-          workPosition,
-          workStart,
-          workEnd,
-          workCompany,
-          workResponsabilities,
-        },
-        education: {
-          educationDegree,
-          educationStart,
-          educationEnd,
-          institutionName,
-        },
-        certification: {
-          certificationGrouped,
-          certificationInstitute,
-        },
-      };
-      props.dispatch(createEmployee(data));
-      e.target.fullName.value = '';
-      e.target.mainSkill.value = '';
-      e.target.summary.value = '';
-      e.target.photoFile.value = '';
-      setSkill([]);
-      setWorkExperience([]);
-      setEducation([]);
-      setCertification([]);
+      if (certificationGrouped.length === certificationInstitute.length) {
+        const data = {
+          id: new Date(),
+          fullName,
+          mainSkill,
+          summary,
+          localImageUrl,
+          file,
+          skill: {
+            skillName,
+            skillHability,
+          },
+          work: {
+            workPosition,
+            workStart,
+            workEnd,
+            workCompany,
+            workResponsabilities,
+          },
+          education: {
+            educationDegree,
+            educationStart,
+            educationEnd,
+            institutionName,
+          },
+          certification: {
+            certificationGrouped,
+            certificationInstitute,
+          },
+        };
+        props.dispatch(createEmployee(data));
+        e.target.fullName.value = '';
+        e.target.mainSkill.value = '';
+        e.target.summary.value = '';
+        e.target.photoFile.value = '';
+        setSkill([]);
+        setWorkExperience([]);
+        setEducation([]);
+        setCertification([]);
 
-      props.history.push('/employee-list');
+        props.history.push('/employee-list');
+      } else {
+        handleDialogOpen('Please be sure to add all certificates.');
+      }
     } else {
       handleDialogOpen(validation[1]);
     }
@@ -388,28 +392,38 @@ function NewEmployeeInfo(props) {
               <h5>Employee Information</h5>
               <Grid
                 container
-                direction="row"
+                direction="column"
                 justify="space-around"
                 alignItems="center"
                 spacing={3}
               >
                 <Grid item>
-                  <FormControl>
-                    <InputLabel htmlFor="component-helper">
-                      Full Name
-                    </InputLabel>
-                    <Input required name="fullName" />
-                    <FormHelperText>Enter Full Name</FormHelperText>
-                  </FormControl>
-                </Grid>
-                <Grid item>
-                  <FormControl>
-                    <InputLabel htmlFor="component-helper">
-                      Main Skill
-                    </InputLabel>
-                    <Input required error={false} name="mainSkill" />
-                    <FormHelperText>Enter Main Skill</FormHelperText>
-                  </FormControl>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-around"
+                    alignItems="center"
+                    spacing={3}
+                  >
+                    <Grid item>
+                      <FormControl>
+                        <InputLabel htmlFor="component-helper">
+                          Full Name
+                        </InputLabel>
+                        <Input required name="fullName" />
+                        <FormHelperText>Enter Full Name</FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <FormControl>
+                        <InputLabel htmlFor="component-helper">
+                          Main Skill
+                        </InputLabel>
+                        <Input required error={false} name="mainSkill" />
+                        <FormHelperText>Enter Main Skill</FormHelperText>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -417,6 +431,7 @@ function NewEmployeeInfo(props) {
                     label="Summary"
                     placeholder="Write Employee Summary"
                     multiline
+                    rows="2"
                     margin="normal"
                   />
                 </Grid>
